@@ -1,6 +1,7 @@
 import React from 'react'
 import Nav from "@/app/(components)/Nav"
 import LeagueCarousel from '../(components)/LeagueCarousel'
+import MainLandingArea from '../(components)/MainLandingArea'
 
 const LandingPage = () => {
   return (
@@ -8,6 +9,8 @@ const LandingPage = () => {
       <Nav />
 
       <LeagueCarousel />
+
+      <MainLandingArea />
     </main>
   )
 }
