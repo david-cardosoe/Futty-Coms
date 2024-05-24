@@ -2,15 +2,18 @@ import React from 'react'
 import Nav from "@/app/(components)/Nav"
 import LeagueCarousel from '../(components)/LeagueCarousel'
 import MainLandingArea from '../(components)/MainLandingArea'
+import { DataProvider } from '../(components)/DataContext'
 
 const LandingPage = () => {
   return (
     <main>
-      <Nav />
+      <DataProvider>
+        <Nav />
 
-      <LeagueCarousel />
+        <LeagueCarousel />
 
-      <MainLandingArea />
+        <MainLandingArea />
+      </DataProvider>
     </main>
   )
 }

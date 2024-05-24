@@ -12,6 +12,13 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        mlsColor: '#E22319',
+        plColor: '#38003c',
+        laligaColor: '#A50044',
+        ligamxColor: '#C1D82F',
+        premTextColor: '#00ff85',
+      }
     },
   },
   plugins: [

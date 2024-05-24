@@ -1,5 +1,6 @@
 'use client';
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
+import { DataContext } from './DataContext';
 import TrendingCard from './(leaguecards)/TrendingCard'
 import PremierLeagueCard from './(leaguecards)/PremierLeagueCard'
 import MLSCard from './(leaguecards)/MLSCard'
@@ -16,15 +17,13 @@ const LeagueCarousel = () => {
         trending: "Trending"
     });
 
-    const [curLeagueSelected, setCurLeagueSelected] = useState(allLeagues.mls);
+    const { setCurrentLeague } = useContext(DataContext);
+    const [localLeague, setLocalLeague] = useState('MLS')
 
     const selectLeague = (league) => {
-        setCurLeagueSelected(league);
+        setCurrentLeague(league);
+        setLocalLeague(league);
     }
-
-    useEffect(() => {
-        console.log(curLeagueSelected);
-    }, [curLeagueSelected]);
 
     /*
     Make sure to make it so whatever current league card is 
@@ -37,19 +36,29 @@ const LeagueCarousel = () => {
     <div className='flex flex-row justify-center'>
         <div className="carousel carousel-center max-w-full p-4 space-x-1 rounded-box">
             <div className="carousel-item">
-                <button onClick={() => selectLeague(allLeagues.trending)}><TrendingCard /></button>
+                <button onClick={() => selectLeague(allLeagues.trending)}>
+                    <TrendingCard curLeague={localLeague} />
+                </button>
             </div> 
             <div className='carousel-item'>
-                <button onClick={() => selectLeague(allLeagues.premierLeague)}><PremierLeagueCard /></button>
+                <button onClick={() => selectLeague(allLeagues.premierLeague)}>
+                    <PremierLeagueCard curLeague={localLeague} />
+                </button>
             </div>
             <div className='carousel-item'>
-                <button onClick={() => selectLeague(allLeagues.mls)}><MLSCard /></button>
+                <button onClick={() => selectLeague(allLeagues.mls)}>
+                    <MLSCard curLeague={localLeague} />
+                </button>
             </div>
             <div className='carousel-item'>
-                <button onClick={() => selectLeague(allLeagues.laLiga)}><LaLigaCard /></button>
+                <button onClick={() => selectLeague(allLeagues.laLiga)}>
+                    <LaLigaCard curLeague={localLeague} />
+                </button>
             </div>
             <div className='carousel-item'>
-                <button onClick={() => selectLeague(allLeagues.ligaMX)}><LigaMXCard /></button>
+                <button onClick={() => selectLeague(allLeagues.ligaMX)}>
+                    <LigaMXCard curLeague={localLeague} />
+                </button>
             </div>
         </div>
     </div>
