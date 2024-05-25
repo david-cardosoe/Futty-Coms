@@ -8,7 +8,7 @@ const MainLandingArea = () => {
     const { currentLeague } = useContext(DataContext);
 
     const leagueColors = {
-        "MLS": 'bg-mlsColor',
+        "MLS": 'bg-red-500',
         "Premier League": 'bg-plColor',
         "La Liga": 'bg-laligaColor',
         "Liga MX": 'bg-ligamxColor',
@@ -17,7 +17,7 @@ const MainLandingArea = () => {
 
 
   return (
-    <div className='m-4'>
+    <div className='mt-6'>
         <MainTopBar league={currentLeague} leagueColor={leagueColors[currentLeague]} />
     </div>
   )

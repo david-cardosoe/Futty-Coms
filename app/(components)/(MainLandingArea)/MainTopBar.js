@@ -11,18 +11,13 @@ const MainTopBar = ({ league, leagueColor }) => {
   }
 
   return (
-    <div>
-      <div className='flex flex-row justify-center'>
-        <h1>{league}</h1>
+    <div className='grid grid-cols-2 gap-1 ml-2 mr-2'>
+      <div className={`text-center border-b-2 ${leagueColor} ${leagueTextColor[league]}`}>
+        <h1>Live Game Chat Rooms</h1>
       </div>
-      <div className='grid grid-cols-2 gap-1 mt-4'>
-        <div className={`text-center border-b-2 ${leagueColor} ${leagueTextColor[league]}`}>
-          <h1>Live Game Chat Rooms</h1>
-        </div>
 
-        <div className={`text-center border-b-2 ${leagueColor} ${leagueTextColor[league]}`}>
-          <h1>League Schedule</h1>
-        </div>
+      <div className={`text-center border-b-2 ${leagueColor} ${leagueTextColor[league]}`}>
+        <h1>League Schedule</h1>
       </div>
     </div>
   )
