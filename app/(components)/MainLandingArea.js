@@ -2,6 +2,7 @@
 import React, { useContext } from 'react';
 import { DataContext } from './DataContext';
 import MainTopBar from './(MainLandingArea)/MainTopBar';
+import RoomsAndSchedule from './(MainLandingArea)/RoomsAndSchedule';
 
 const MainLandingArea = () => {
 
@@ -19,6 +20,8 @@ const MainLandingArea = () => {
   return (
     <div className='mt-6'>
         <MainTopBar league={currentLeague} leagueColor={leagueColors[currentLeague]} />
+
+        <RoomsAndSchedule />
     </div>
   )
 }
