@@ -2,6 +2,8 @@ import React, { useEffect, useState} from 'react'
 import axios from 'axios'
 import Loading from '../(LoadingError)/Loading';
 import Error from '../(LoadingError)/Error';
+import Rooms from './Rooms';
+import Schedule from './Schedule';
 
 const RoomsAndSchedule = () => {
 
@@ -51,7 +53,13 @@ const RoomsAndSchedule = () => {
     // Add components to display schedule on the right and currently open rooms on the left.
     // DO THE RIGHT SIDE (SCHEDULE) FRIST
   return (
-    <div className='text-center'>RoomsAndSchedule</div>
+    <div className='grid grid-cols-2 m-2'>
+
+        <Rooms />
+
+        <Schedule />
+
+    </div>
   )
 }
 
