@@ -19,7 +19,19 @@ const RoomsAndSchedule = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [timeZone, setTimeZone] = useState('')
+
     useEffect(() => {
+
+        const getTimeZone = () => {
+            const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            // Delete Later
+            console.log("Timezone:", userTimeZone)
+
+            setTimeZone(userTimeZone);
+        }
+
         const fetchSchedule = async () => {
             try {
                 const response = await axios.get(`/api/get-season-data?seasonId=${seasonId}`);
@@ -34,6 +46,8 @@ const RoomsAndSchedule = () => {
                 setLoading(false);
             }
         };
+
+        getTimeZone();
 
         fetchSchedule();
     }, [seasonId]);
