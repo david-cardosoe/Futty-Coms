@@ -24,10 +24,97 @@ const RoomsAndSchedule = () => {
     const [timeZone, setTimeZone] = useState('')
     const [dataTimeZone, setDataTimeZone] = useState("UTC")
 
+    const createMatchObject = (matchInfo, userTimeZone) => {
+
+        let matchObject = {
+            id: "",
+            homeTeam: "",
+            awayTeam: "",
+            homeScore: "",
+            awayScore: "",
+            year: "",
+            month: "",
+            day: "",
+            hour: "",
+            minute: "",
+            gameStatus: "",
+        }
+
+        // Grab and set id
+        matchObject.id = matchInfo.id
+
+        //Method to grab home and away team names
+        if (matchInfo.participants[0].meta.location == 'home') {
+            matchObject.homeTeam = matchInfo.participants[0].name 
+            matchObject.awayTeam = matchInfo.participants[1].name 
+        } else {
+            matchObject.homeTeam = matchInfo.participants[1].name 
+            matchObject.awayTeam = matchInfo.participants[0].name 
+        }  
+
+        // Method to grab Home and Away score
+        let matchScores = matchInfo.scores
+
+        for (let i = 0; i < matchScores.length; i++) {
+            if (matchScores[i].description == "CURRENT") {
+                if (matchScores[i].score.participant == 'away') {
+                    matchObject.awayScore = matchScores[i].score.goals
+                } else if (matchScores[i].score.participant == 'home') {
+                    matchObject.homeScore = matchScores[i].score.goals
+                }
+            }
+        }
+
+        // Method to convert time based on users location
+        let matchDate = matchInfo.starting_at
+        let isoMatchDate = matchDate.replace(' ', 'T') + 'Z';
+
+        let utcMatchDate = DateTime.fromISO(isoMatchDate, { zone : 'utc'});
+
+        let userBasedMatchDate = utcMatchDate.setZone(userTimeZone);
+
+        matchObject.year = userBasedMatchDate.year
+        matchObject.month = userBasedMatchDate.month
+        matchObject.day = userBasedMatchDate.day
+        matchObject.hour = userBasedMatchDate.hour
+        matchObject.minute = userBasedMatchDate.minute
+
+        //Method to grab game status
+        if (matchInfo.result_info != null) {
+            matchObject.gameStatus = 'FT'
+        } else if (1 > 2) {
+            // Will need to come up with a way/condition to know if a live game
+            matchObject.gameStatus = 'LIVE'
+        } else {
+            matchObject.gameStatus = 'TBD'
+        }
+
+        return matchObject
+    }
+
     const refineSchedule = (rawScheduleData) => {
+
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         let sortedFixtures = rawScheduleData.sort((a, b) => a.starting_at_timestamp - b.starting_at_timestamp);
 
+        let fixtures = []
+
+        //console.log(sortedFixtures)
+        //console.log(userTimeZone)
+
+        try {
+            for (let i = 0; i < sortedFixtures.length; i++) {
+                let refinedMatchData = createMatchObject(sortedFixtures[i], userTimeZone)
+                fixtures.push(refinedMatchData)
+            }
+        } catch (error) {
+            console.error(error.message)
+        }
+
+        console.log(fixtures)
+
+        /*
         let exampleMatchObject = {
             homeTeam: "",
             awayTeam: "",
@@ -66,7 +153,7 @@ const RoomsAndSchedule = () => {
         }
 
         // Method to convert time based on users location
-        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        //const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         let matchDate = tempMatch.starting_at
         let isoMatchDate = matchDate.replace(' ', 'T') + 'Z';
 
@@ -95,10 +182,10 @@ const RoomsAndSchedule = () => {
 
         console.log(sortedFixtures[0])
 
-        /*
         for (let i = 0; i < rawScheduleData.length; i++) {
             console.log(rawScheduleData[i])
         }
+
         */
 
     }
