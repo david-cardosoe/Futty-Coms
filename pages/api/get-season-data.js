@@ -12,8 +12,7 @@ export default async function handler(req, res) {
     // Storing API Token
     const API_TOKEN = process.env.MYSPORTMONKS_API_TOKEN
 
-    const API_ADDRESS = `https://api.sportmonks.com/v3/football/seasons/${seasonId}?api_token=${API_TOKEN}&include=fixtures`
-
+    const API_ADDRESS = `https://api.sportmonks.com/v3/football/schedules/seasons/${seasonId}?api_token=${API_TOKEN}`
     try {
         const response = await axios.get(API_ADDRESS, {
             params: {
