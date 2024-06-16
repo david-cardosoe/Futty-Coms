@@ -1,24 +1,24 @@
 import React from 'react'
 
-const UpcomingMatchCard = ({ date, time, team1, team2 }) => {
+const UpcomingMatchCard = ({ homeTeam, awayTeam, month, day, year, time }) => {
   return (
     
-    <div className="card w-full h-32 bg-base-100 shadow-md my-2">
-        <div className="card-body grid grid-cols-10">
-          <div className='col-span-7 border-r-2 border-slate-500'>
-            <div className='grid grid-rows-2 gap-4'>
+    <div className="card w-full bg-base-100 shadow-md my-2">
+        <div className="card-body flex flex-col sm:flex-row">
+          <div className='sm:w-7/10 sm:border-r-2 border-slate-500 flex-1'>
+            <div className='grid grid-rows-2 gap-2 sm:gap-4'>
               <div>
-                <p>{team1}</p>
+                <p className='truncate'>{homeTeam}</p>
               </div>
               <div>
-                <p>{team2}</p>
+                <p className='truncate'>{awayTeam}</p>
               </div>
             </div>
           </div>
-          <div className='col-span-3 text-center'>
+          <div className='sm:w-3/10 text-center flex-1 mt-4 sm:mt-0'>
             <div className='grid grid-rows-2 gap-1 text-sm'>
               <div>
-                <p>{date}</p>
+                <p>{month} {day}, {year}</p>
               </div>
               <div>
                 <p>{time}</p>

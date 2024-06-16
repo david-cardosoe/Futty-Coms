@@ -3,27 +3,7 @@ import UpcomingMatchCard from '../(matchcards)/UpcomingMatchCard'
 import PastMatchCard from '../(matchcards)/PastMatchCard'
 import LiveMatchCard from '../(matchcards)/LiveMatchCard'
 
-const Schedule = () => {
-
-  // ft = Full Time, ucg = Upcoming, live = Live
-
-  const mockFixtureData = [
-    {id: 1, type: "ft", date: "April 10, 2024", team1: 'Everton', team2: 'Burnley', team1Score: "2", team2Score: "1"},
-    {id: 2, type: "ft", date: "April 10, 2024", team1: 'Everton', team2: 'Burnley', team1Score: "2", team2Score: "1"},
-    {id: 3, type: "ft", date: "April 10, 2024", team1: 'Everton', team2: 'Burnley', team1Score: "2", team2Score: "1"},
-    {id: 4, type: "ft", date: "April 10, 2024", team1: 'Everton', team2: 'Burnley', team1Score: "2", team2Score: "1"},
-    {id: 5, type: "ft", date: "April 10, 2024", team1: 'Everton', team2: 'Burnley', team1Score: "2", team2Score: "1"},
-    {id: 6, type: "ucg", date: "August 27, 2024", time: '7:30 AM', team1: 'Brighton', team2: 'Newcastle'},
-    {id: 7, type: "ucg", date: "August 27, 2024", time: '7:30 AM', team1: 'Brighton', team2: 'Newcastle'},
-    {id: 8, type: "ucg", date: "August 27, 2024", time: '7:30 AM', team1: 'Brighton', team2: 'Newcastle'},
-    {id: 9, type: "ucg", date: "August 27, 2024", time: '7:30 AM', team1: 'Brighton', team2: 'Newcastle'},
-    {id: 10, type: "ucg", date: "August 27, 2024", time: '7:30 AM', team1: 'Brighton', team2: 'Newcastle'},
-    {id: 11, type: "live", curMinute: "79'", team1: 'Brighton', team2: 'Newcastle', team1Score: 0, team2Score: 2},
-    {id: 12, type: "live", curMinute: "79'", team1: 'Brighton', team2: 'Newcastle', team1Score: 0, team2Score: 2},
-    {id: 13, type: "live", curMinute: "79'", team1: 'Brighton', team2: 'Newcastle', team1Score: 0, team2Score: 2},
-    {id: 14, type: "live", curMinute: "79'", team1: 'Brighton', team2: 'Newcastle', team1Score: 0, team2Score: 2},
-    {id: 15, type: "live", curMinute: "79'", team1: 'Brighton', team2: 'Newcastle', team1Score: 0, team2Score: 2},
-  ]
+const Schedule = ({ leagueSchedule }) => {
 
   return (
     <div className='overflow-y-scroll bg-gray-100 h-[55vh] flex-row justify-center items-center mx-14 p-4'>
@@ -31,23 +11,29 @@ const Schedule = () => {
       {/* Card for when there is an upcoming game that has not been played yet */}
       {/* <UpcomingMatchCard /> */}
 
-      {mockFixtureData.map(item => {
+      {leagueSchedule.map(item => {
 
-        switch (item.type) {
-          case "ucg":
+        switch (item.gameStatus) {
+          case "TBD":
             return (
-              <UpcomingMatchCard key={item.id} date={item.date} time={item.time} 
-              team1={item.team1} team2={item.team2} />
+              <UpcomingMatchCard key={item.id} homeTeam={item.homeTeam} awayTeam={item.awayTeam} 
+              month={item.month} day={item.day} year={item.year} time={item.time} />
             )
-          case "ft":
+          case "FT":
             return (
-              <PastMatchCard key={item.id} date={item.date} team1={item.team1} 
-              team2={item.team2} team1Score={item.team1Score} team2Score={item.team2Score} />
+              <PastMatchCard key={item.id} homeTeam={item.homeTeam} awayTeam={item.awayTeam} 
+              homeScore={item.homeScore} awayScore={item.awayScore} month={item.month} 
+              day={item.day} year={item.year} />
             )
-          case "live":
+          case "LIVE":
             return (
-              <LiveMatchCard key={item.id} curMinute={item.curMinute} team1={item.team1}
-              team2={item.team2} team1Score={item.team1Score} team2Score={item.team2Score} />
+              <LiveMatchCard key={item.id} homeTeam={item.homeTeam} awayTeam={item.awayTeam} 
+              homeScore={item.homeScore} awayScore={item.awayScore} gameStatus={item.gameStatus} />
+            )
+          case "HT":
+            return (
+              <LiveMatchCard key={item.id} homeTeam={item.homeTeam} awayTeam={item.awayTeam} 
+              homeScore={item.homeScore} awayScore={item.awayScore} gameStatus={item.gameStatus} />
             )
           default:
             return null

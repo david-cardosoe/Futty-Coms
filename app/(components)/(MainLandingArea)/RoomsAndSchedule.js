@@ -5,15 +5,10 @@ import Error from '../(LoadingError)/Error';
 import Rooms from './Rooms';
 import Schedule from './Schedule';
 import { DateTime } from 'luxon';
+import { curSeasonIds, monthsTranslation } from '@/app/(CommonlyUsed)/data';
+import { militaryToStandard } from '@/app/(CommonlyUsed)/funtions';
 
 const RoomsAndSchedule = () => {
-
-    const curSeasonIds = Object.freeze({
-        mls: '22974',
-        premierLeague: '21646',
-        laLiga: '21694',
-        ligaMX: '21623',
-    });
 
     const [seasonId, setSeasonId] = useState(curSeasonIds.mls);
     const [data, setData] = useState([]);
@@ -21,8 +16,8 @@ const RoomsAndSchedule = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [timeZone, setTimeZone] = useState('')
-    const [dataTimeZone, setDataTimeZone] = useState("UTC")
+    //const [timeZone, setTimeZone] = useState('')
+    //const [dataTimeZone, setDataTimeZone] = useState("UTC")
 
     const createMatchObject = (matchInfo, userTimeZone) => {
 
@@ -35,8 +30,7 @@ const RoomsAndSchedule = () => {
             year: "",
             month: "",
             day: "",
-            hour: "",
-            minute: "",
+            time: "",
             gameStatus: "",
         }
 
@@ -73,19 +67,26 @@ const RoomsAndSchedule = () => {
 
         let userBasedMatchDate = utcMatchDate.setZone(userTimeZone);
 
-        matchObject.year = userBasedMatchDate.year
-        matchObject.month = userBasedMatchDate.month
+        // Gets only the last 2 #'s of the year passed.
+        matchObject.year = userBasedMatchDate.year.toString().substring(2)
+
+        // Translate Month # to Month name abbreviation using dict
+        matchObject.month = monthsTranslation[userBasedMatchDate.month]
+        
         matchObject.day = userBasedMatchDate.day
-        matchObject.hour = userBasedMatchDate.hour
-        matchObject.minute = userBasedMatchDate.minute
+
+        // Changed time from military time to standard
+        matchObject.time = militaryToStandard(userBasedMatchDate.hour, userBasedMatchDate.minute)
 
         //Method to grab game status
-        if (matchInfo.result_info != null) {
+        if (matchInfo.state_id == 5) {
             matchObject.gameStatus = 'FT'
-        } else if (1 > 2) {
+        } else if (matchInfo.state_id == 2 || matchInfo.state_id == 22) {
             // Will need to come up with a way/condition to know if a live game
             matchObject.gameStatus = 'LIVE'
-        } else {
+        } else if (matchInfo.state_id == 3) {
+            matchObject.gameStatus = 'HT'
+        }else {
             matchObject.gameStatus = 'TBD'
         }
 
@@ -94,112 +95,42 @@ const RoomsAndSchedule = () => {
 
     const refineSchedule = (rawScheduleData) => {
 
+        console.log("Raw Data:", rawScheduleData)
+
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         let sortedFixtures = rawScheduleData.sort((a, b) => a.starting_at_timestamp - b.starting_at_timestamp);
 
-        let fixtures = []
+        let leagueFixtures = []
 
         //console.log(sortedFixtures)
         //console.log(userTimeZone)
 
+        let nextMatchFound = false
+
         try {
             for (let i = 0; i < sortedFixtures.length; i++) {
                 let refinedMatchData = createMatchObject(sortedFixtures[i], userTimeZone)
-                fixtures.push(refinedMatchData)
+
+                // Find next match being played id
+                /*
+                if (!nextMatchFound && refinedMatchData.gameStatus == 'TBD') {
+                    
+                }
+                */
+
+                leagueFixtures.push(refinedMatchData)
             }
         } catch (error) {
             console.error(error.message)
         }
-
-        console.log(fixtures)
-
-        /*
-        let exampleMatchObject = {
-            homeTeam: "",
-            awayTeam: "",
-            homeScore: "",
-            awayScore: "",
-            year: "",
-            month: "",
-            day: "",
-            hour: "",
-            minute: "",
-            gameStatus: "",
-        }
-
-        let tempMatch = sortedFixtures[0]
-
-        //Method to grab home and away team names
-        if (tempMatch.participants[0].meta.location == 'home') {
-            exampleMatchObject.homeTeam = tempMatch.participants[0].name 
-            exampleMatchObject.awayTeam = tempMatch.participants[1].name 
-        } else {
-            exampleMatchObject.homeTeam = tempMatch.participants[1].name 
-            exampleMatchObject.awayTeam = tempMatch.participants[0].name 
-        }  
-
-        // Method to grab Home and Away score
-        let matchScores = tempMatch.scores
-
-        for (let i = 0; i < matchScores.length; i++) {
-            if (matchScores[i].description == "CURRENT") {
-                if (matchScores[i].score.participant == 'away') {
-                    exampleMatchObject.awayScore = matchScores[i].score.goals
-                } else if (matchScores[i].score.participant == 'home') {
-                    exampleMatchObject.homeScore = matchScores[i].score.goals
-                }
-            }
-        }
-
-        // Method to convert time based on users location
-        //const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        let matchDate = tempMatch.starting_at
-        let isoMatchDate = matchDate.replace(' ', 'T') + 'Z';
-
-        let utcMatchDate = DateTime.fromISO(isoMatchDate, { zone : 'utc'});
-
-        let userBasedMatchDate = utcMatchDate.setZone(userTimeZone);
-
-        exampleMatchObject.year = userBasedMatchDate.year
-        exampleMatchObject.month = userBasedMatchDate.month
-        exampleMatchObject.day = userBasedMatchDate.day
-        exampleMatchObject.hour = userBasedMatchDate.hour
-        exampleMatchObject.minute = userBasedMatchDate.minute
-
-        //Method to grab game status
-        if (tempMatch.result_info != null) {
-            exampleMatchObject.gameStatus = 'FT'
-        } else if (1 > 2) {
-            // Will need to come up with a way/condition to know if a live game
-            exampleMatchObject.gameStatus = 'LIVE'
-        } else {
-            exampleMatchObject.gameStatus = 'TBD'
-        }
-
-
-        console.log(exampleMatchObject)
-
-        console.log(sortedFixtures[0])
-
-        for (let i = 0; i < rawScheduleData.length; i++) {
-            console.log(rawScheduleData[i])
-        }
-
-        */
+        
+        setFixtures(leagueFixtures)
+        console.log(leagueFixtures)
 
     }
 
     useEffect(() => {
-
-        const getTimeZone = () => {
-            const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-            // Delete Later
-            //console.log("Timezone:", userTimeZone)
-
-            setTimeZone(userTimeZone);
-        }
 
         const fetchSchedule = async () => {
             try {
@@ -210,8 +141,8 @@ const RoomsAndSchedule = () => {
                 const dataObject = response.data
 
                 // Grab timezone used by data and set it
-                setDataTimeZone(dataObject.timezone)
-                console.log("Data timezone:", dataObject.timezone)
+                //setDataTimeZone(dataObject.timezone)
+                //console.log("Data timezone:", dataObject.timezone)
 
                 setData(dataObject.data[0]);
 
@@ -221,13 +152,14 @@ const RoomsAndSchedule = () => {
 
             } catch (errror) {
                 setError('Failed to fetch currently selected season data.')
+                console.error(error)
             } finally {
                 setLoading(false);
             }
         };
 
-        getTimeZone();
         fetchSchedule();
+        
     }, [seasonId]);
 
     if (loading) {
@@ -249,7 +181,7 @@ const RoomsAndSchedule = () => {
 
         <Rooms />
 
-        <Schedule />
+        <Schedule leagueSchedule={fixtures} />
 
     </div>
   )
