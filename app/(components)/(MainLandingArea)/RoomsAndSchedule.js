@@ -16,6 +16,8 @@ const RoomsAndSchedule = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [nextMatchId, setNextMatchId] = useState(null);
+
     //const [timeZone, setTimeZone] = useState('')
     //const [dataTimeZone, setDataTimeZone] = useState("UTC")
 
@@ -95,16 +97,14 @@ const RoomsAndSchedule = () => {
 
     const refineSchedule = (rawScheduleData) => {
 
-        console.log("Raw Data:", rawScheduleData)
+        // Print raw schedule data before refinement
+        //console.log("Raw Data:", rawScheduleData)
 
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         let sortedFixtures = rawScheduleData.sort((a, b) => a.starting_at_timestamp - b.starting_at_timestamp);
 
         let leagueFixtures = []
-
-        //console.log(sortedFixtures)
-        //console.log(userTimeZone)
 
         let nextMatchFound = false
 
@@ -113,11 +113,10 @@ const RoomsAndSchedule = () => {
                 let refinedMatchData = createMatchObject(sortedFixtures[i], userTimeZone)
 
                 // Find next match being played id
-                /*
-                if (!nextMatchFound && refinedMatchData.gameStatus == 'TBD') {
-                    
+                if (!nextMatchFound && refinedMatchData.gameStatus != 'FT') {
+                    setNextMatchId(refinedMatchData.id)
+                    nextMatchFound = true;
                 }
-                */
 
                 leagueFixtures.push(refinedMatchData)
             }
@@ -181,7 +180,7 @@ const RoomsAndSchedule = () => {
 
         <Rooms />
 
-        <Schedule leagueSchedule={fixtures} />
+        <Schedule leagueSchedule={fixtures} nextMatchId={nextMatchId} />
 
     </div>
   )
