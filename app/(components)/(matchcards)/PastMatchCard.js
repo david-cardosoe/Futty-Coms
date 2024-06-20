@@ -1,9 +1,9 @@
 import React from 'react'
 
-const PastMatchCard = ({ homeTeam, awayTeam, homeScore, awayScore, month, day, year }) => {
+const PastMatchCard = ({ homeTeam, awayTeam, homeScore, awayScore, month, day, year, id }) => {
   return (
     
-    <div className="card w-full h-32 bg-base-100 shadow-md my-2">
+    <div className="card w-full h-32 bg-base-100 shadow-md my-2" id={`${id}`}>
         <div className="card-body grid grid-cols-10">
           <div className='sm:w-7/10 col-span-7 border-r-2 border-slate-500'>
             <div className='grid grid-cols-2'>

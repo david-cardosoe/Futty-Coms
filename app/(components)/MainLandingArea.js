@@ -21,7 +21,7 @@ const MainLandingArea = () => {
     <div className='mt-6'>
         <MainTopBar league={currentLeague} leagueColor={leagueColors[currentLeague]} />
 
-        <RoomsAndSchedule />
+        <RoomsAndSchedule curSelectedLeague={currentLeague} />
     </div>
   )
 }

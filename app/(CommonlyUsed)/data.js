@@ -1,10 +1,11 @@
 
 // League Season IDs, for each league current season ID to retrive data
 export const curSeasonIds = Object.freeze({
-    mls: '22974',
-    premierLeague: '21646',
-    laLiga: '21694',
-    ligaMX: '21623',
+    'MLS': '22974',
+    "Premier League": '21646',
+    "La Liga": '21694',
+    "Liga MX": '21623',
+    "Trending": null,
 });
 
 export const monthsTranslation = {
@@ -20,4 +21,10 @@ export const monthsTranslation = {
     10: 'Oct',
     11: 'Nov',
     12: 'Dec',
+}
+
+export const matchStatusCodes = {
+    'FT': [5, 7, 8, 14, 17],
+    'LIVE': [2, 4, 6, 9, 22, 25],
+    'TBD': [1, 10, 11, 12, 13, 15, 16, 18, 19, 21, 26],
 }

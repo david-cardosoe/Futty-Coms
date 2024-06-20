@@ -12,7 +12,8 @@ const Schedule = ({ leagueSchedule, nextMatchId }) => {
   containerRef to get a hold on the actual div container and snap to the id
   of the next upcoming game.
 
-  NOTE: Need to add logic so that if there is no next game it will go to the last game
+  NOTE: If there is no next game, all games in season have been played like end of season,
+  it will go to the last game
   */
   useEffect(() => {
 
@@ -29,6 +30,7 @@ const Schedule = ({ leagueSchedule, nextMatchId }) => {
       }
 
       if (nextMatchId == null) {
+
         const matchElement = document.getElementById(leagueSchedule[leagueSchedule.length - 1].id)
 
         if (matchElement) {
